@@ -1,11 +1,12 @@
-@startuml
+@startuml relation_between_entities
     !include ./prescription.pu
 
-    patients - insurers
-    patients - public_bears
-    patients -d- consultation
-    consultation -l-|{ prescribedMedicine
-    consultation - hospital
-    insurers - prefectures
+    consultation ||-d-|| patients
+    patients }|-|| insurers
+    patients -d- public_bears
+    consultation ||-l-|{ prescribedMedicine
+    consultation }|-|| hospital
+    insurers }|-do-|| prefectures
+    hospital }|-|| prefectures
 
 @enduml
