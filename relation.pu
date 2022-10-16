@@ -1,0 +1,11 @@
+@startuml
+    !include ./prescription.pu
+
+    patients - insurers
+    patients - public_bears
+    patients -d- consultation
+    consultation -l-|{ prescribedMedicine
+    consultation - hospital
+    insurers - prefectures
+
+@enduml

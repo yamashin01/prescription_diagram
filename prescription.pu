@@ -1,0 +1,77 @@
+@startuml
+
+!include ./style.pu
+
+entity "都道府県" as prefectures <<M,MASTER_MARK_COLOR>> {
+    + 都道府県名 [PK]
+    --
+    都道府県番号
+}
+
+package 保険データベース as insuredb <<Database>> {
+
+    entity "保険者" as insurers <<M,MASTER_MARK_COLOR>> {
+        + 保険者番号 [PK]
+        --
+        保険者名
+        保険者所在地
+    }
+    entity "公費負担者" as public_bears <<M,MASTER_MARK_COLOR>> {
+        + 公費負担者番号 [PK]
+        --
+        公費負担者名
+        公費負担者所在地
+    }
+}
+package "処方箋データ" as target_system {
+    entity "患者情報" as patients <<主,TRANSACTION_MARK_COLOR>> MAIN_ENTITY {
+        + 患者ID [PK]
+        --
+        名前
+        生年月日
+        年齢
+        性別
+        区分
+        保険者番号
+        公費負担者番号
+        公費負担医療の受給者番号
+        被保険者証・被保険者手帳の記号・番号
+    }
+
+    entity "受診情報" as consultation <<T,TRANSACTION_MARK_COLOR>> MAIN_ENTITY_2 {
+        + 受診番号 [PK]
+        --
+        日付
+        医療機関コード
+        保険医名
+        患者ID
+        医薬品コード
+    }
+    entity "処方した薬情報" as prescribedMedicine <<T,TRANSACTION_MARK_COLOR>> {
+        + 医薬品コード [PK]
+        --
+        医薬品名
+        用量
+        使用頻度
+        使用部位
+        ジェネリックへの変更可否
+    }
+}
+
+package 医療データベース as medicaldb <<Database>> {
+    entity "病院情報" as hospital <<M,MASTER_MARK_COLOR>> {
+        + 医療機関コード [PK]
+        --
+        病院名
+        住所
+        電話番号
+    }
+}
+' patients - insurers
+' patients - public_bears
+' patients -d- consultation
+' consultation -l- prescribedMedicine
+' consultation - hospital
+' insurers - prefectures
+
+@enduml
